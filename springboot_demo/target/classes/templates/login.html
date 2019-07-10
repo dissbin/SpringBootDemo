@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<title>无标题文档</title>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<style>
+body {
+	font-size: 20px;
+	font-famply: "幼圆";
+}
+
+body, form, input {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+form {
+	height: 300px;
+	width: 450px;
+	margin: 20px auto;
+	padding-top: 50px;
+	background: rgba(0, 0, 0, 1.00);
+}
+
+p {
+	height: 50px;
+	width: 400px;
+	margin: 20px auto;
+	padding-left: 25px;
+	border: 1px white solid;
+}
+
+span {
+	color: white;
+	display: inline-block;
+	width: 100px;
+	height: 24px;
+	line-height: 24px;
+	text-align: right;
+}
+
+.num, .pass {
+	height: 40px;
+	width: 250px;
+	border: 1px blue solid;
+}
+
+.btn {
+	height: 30px;
+	width: 360px;
+	margin-top: 30px;
+	border: 1px white solid;
+	color: white;
+	font-size: 20px;
+}
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#btnSub").click(function(){
+			$.post("/login",
+				{
+					username:$("input:text").val(),
+					password:$("input:password").val()
+				},
+				function(data,status){
+					alert(JSON.stringify(data['info']));
+				}
+			
+			);
+			
+		});
+	});
+</script>
+</head>
+
+<body>
+	<form action="/register" method="post">
+		<p>
+			<span class="left">账号/号码:</span> <input type="text" name="username"
+				 class="num" />
+		</p>
+		<p>
+			<span class="left">密码:</span> <input type="password" name="password"
+				class="pass" />
+		</p>
+		<p>
+			<input type="button" id="btnSub" class="btn" value="登录" />
+		</p>
+	</form>
+</body>
+</html>
