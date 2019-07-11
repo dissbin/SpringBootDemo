@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>table模块快速使用</title>
+  <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+</head>
+<body>
+	 
+	 
+	 <div style="height:700px;width:100%">
+	 	<table id="demo" lay-filter="test"></table>
+	 </div>
+
+ 
+<script src="/layui/layui.js"></script>
+<script>
+
+
+layui.use('table', function(){
+  var table = layui.table;
+  
+  //第一个实例
+  table.render({
+    elem: '#demo'
+    ,url: '/findAll' //数据接口
+    ,page: {limit:15} //开启分页
+    ,parseData:function(res){
+    	console.log(res);
+    	return {
+    		"code":0,
+    		"msg":"",
+    		"count":10000,
+    		data:res
+    	}
+    }
+    ,cols: [[ //表头
+	      {field: 'username', title: '用户名', sort: true, fixed: 'left'}
+	      ,{field: 'password', title: '密码', sort: true}
+	      ,{field: 'status', title: '状态'} 
+	      ,{field: 'email', title: '邮箱', sort: true}
+    ]]
+  });
+  
+});
+</script>
+</body>
+</html>

@@ -130,7 +130,7 @@ span {
 							$.post("/register", {
 								username : $("input:text").val(),
 								password : $("input:password").val(),
-								tpassword : $("#tpassword").val()
+								email : $("#email").val()
 							}, function(data, status) {
 								alert(JSON.stringify(data['info']));
 							}

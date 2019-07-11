@@ -3,6 +3,9 @@ package com.AIfntech.service.controller;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.coyote.http11.filters.VoidInputFilter;
 import org.hibernate.validator.cfg.context.ReturnValueConstraintMappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.AIfntech.service.pojo.Result;
+import com.AIfntech.service.pojo.TbCategoryAmt;
 import com.AIfntech.service.pojo.User;
 import com.AIfntech.service.userService.UserService;
 
@@ -51,14 +55,6 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping("/prepareRegister")
-	public String prepareRegister() {
-		return "register";
-	}
-	@RequestMapping("/prepareLogin")
-	public String prepareLogin() {
-		return "login";
-	}
 	
 	@RequestMapping("/dele")
 	@ResponseBody
@@ -76,31 +72,44 @@ public class UserController {
 		
 	}
 	
+	@RequestMapping("/prepareLogin")
+	public String prepareLogin() {
+		return "login";
+	} 
+	@RequestMapping("/prepareRegister")
+	public String prepareRegister() {
+		return "register";
+	} 
+	
 	@RequestMapping("/login")
 	@ResponseBody
-	public Result login(User user) {
-		
+	public Result login(User user,HttpServletRequest request) {
 			try {
 				User resultUser = userService.findByName(user);
-				System.out.println(resultUser);
-				if( resultUser!=null && resultUser.getPassword().equals(user.getPassword()))
-					return new Result(true,"登录成功！");
+				System.out.println("验证用户名:"+user);
+				if( resultUser!=null && resultUser.getPassword().equals(user.getPassword())) {
+					HttpSession session = request.getSession(true);
+					System.out.println("通过Session取得用户名:"+request.getParameter("username"));
+					session.setAttribute("username", request.getParameter("username")+"");
+					return new Result(true, "登录成功！");
+				}
 				else {
-					return new Result(false, "登录失败！");
+					return new Result(false, "失败！"); 
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return new Result(false, "失败");
+				
 			}
+			return new Result(false, "失败！"); 
 			
 		
 	}
 	@RequestMapping("/findAll")
 	@ResponseBody
-	public List<User> findAll(){
+	public List<User> findAll(int page,int limit){
 		try {
-			return userService.findAll();
+			return userService.findAll(page,limit);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,5 +140,15 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	@RequestMapping("/showUsers")
+	public String showUsers() {
+		return "/html/users";
+	}
+	
+	@RequestMapping("/findCategoryAmt")
+	@ResponseBody
+	public List<TbCategoryAmt> findCategoryAmt(){
+		return userService.findCategoryAmt();
 	}
 }
