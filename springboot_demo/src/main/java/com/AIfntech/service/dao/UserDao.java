@@ -12,7 +12,11 @@ import java.util.PrimitiveIterator.OfDouble;
 
 import org.springframework.stereotype.Component;
 
+import com.AIfntech.service.pojo.ForceChart;
+import com.AIfntech.service.pojo.ForceLink;
+import com.AIfntech.service.pojo.ForceNode;
 import com.AIfntech.service.pojo.TbCategoryAmt;
+import com.AIfntech.service.pojo.TbCityGoodsAmt;
 import com.AIfntech.service.pojo.User;
 import com.AIfntech.service.util.AIDBUtil;
 
@@ -209,9 +213,9 @@ public class UserDao {
 		Connection connection = null;
 		String sql = null;
 		try {
-			connection = AIDBUtil.getConnection();
+			connection = AIDBUtil.getAppConnection();
 			connection.setAutoCommit(false);
-			sql = "select * from app ";
+			sql = "select * from app.Tb_category_amt ";
 			PreparedStatement ptmt = connection.prepareStatement(sql);
 			ResultSet rs = ptmt.executeQuery();
 			connection.commit();
@@ -231,5 +235,91 @@ public class UserDao {
 			}
 		}
 		return null;
+	}
+	
+	public List<TbCityGoodsAmt> findCityGoodsAmt(){
+		Connection connection = null;
+		String sql = null;
+		try {
+			connection = AIDBUtil.getAppConnection();
+			connection.setAutoCommit(false);
+			sql = "select" + 
+					"    distinct" + 
+					"    goods_name,sum(goods_sell_amt) as goods_sell_amt " + 
+					"    from Tb_city_goods_amt " + 
+					"    group by goods_id,goods_name " + 
+					"    order by 'goods_sell_amt' DESC limit 5 ";
+			PreparedStatement ptmt = connection.prepareStatement(sql);
+			ResultSet rs = ptmt.executeQuery();
+			connection.commit();
+			ArrayList<TbCityGoodsAmt> list = new ArrayList<TbCityGoodsAmt>();
+			while(rs.next()) {
+				list.add(new TbCityGoodsAmt(rs.getString("goods_name"),rs.getBigDecimal("goods_sell_amt")));
+			}
+			return list;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public ForceChart findForceChart(){
+		Connection connection = null;
+		String sql = null;
+		ForceChart forceChart = new ForceChart();
+		try {
+			//连接ForceNode表获取数据
+			connection = AIDBUtil.getAppConnection();
+			connection.setAutoCommit(false);
+			sql = "select * from force_node";
+			PreparedStatement ptmt = connection.prepareStatement(sql);
+			ResultSet rs = ptmt.executeQuery();
+			connection.commit();
+			ArrayList<ForceNode> nodelist = new ArrayList<ForceNode>();
+			while(rs.next()) {
+				nodelist.add(new ForceNode(rs.getInt("category"),rs.getString("name"),rs.getInt("value"),rs.getString("label")));
+			}
+			forceChart.setForceNodeList(nodelist);;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		try {
+			//连接ForceNode表获取数据
+			connection = AIDBUtil.getAppConnection();
+			connection.setAutoCommit(false);
+			sql = "select * from force_link";
+			PreparedStatement ptmt = connection.prepareStatement(sql);
+			ResultSet rs = ptmt.executeQuery();
+			connection.commit();
+			ArrayList<ForceLink> linkList = new ArrayList<ForceLink>();
+			while(rs.next()) {
+				linkList.add(new ForceLink(rs.getString("source"),rs.getString("target"),rs.getInt("value"),rs.getString("label")));
+			}
+			forceChart.setForceLinkList(linkList);;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return forceChart;
 	}
 }

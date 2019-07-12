@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.AIfntech.service.pojo.ForceChart;
 import com.AIfntech.service.pojo.Result;
 import com.AIfntech.service.pojo.TbCategoryAmt;
+import com.AIfntech.service.pojo.TbCityGoodsAmt;
 import com.AIfntech.service.pojo.User;
 import com.AIfntech.service.userService.UserService;
 
@@ -86,12 +88,18 @@ public class UserController {
 	public Result login(User user,HttpServletRequest request) {
 			try {
 				User resultUser = userService.findByName(user);
+				System.out.println();
 				System.out.println("验证用户名:"+user);
 				if( resultUser!=null && resultUser.getPassword().equals(user.getPassword())) {
 					HttpSession session = request.getSession(true);
 					System.out.println("通过Session取得用户名:"+request.getParameter("username"));
 					session.setAttribute("username", request.getParameter("username")+"");
-					return new Result(true, "登录成功！");
+					String targetUrl = "/showUsers";
+					if(session.getAttribute(targetUrl)!=null) {
+						System.out.println("目标网址不为null！");
+						targetUrl = session.getAttribute("targetUrl")+"";
+					}
+					return new Result(true, targetUrl );
 				}
 				else {
 					return new Result(false, "失败！"); 
@@ -143,12 +151,30 @@ public class UserController {
 	}
 	@RequestMapping("/showUsers")
 	public String showUsers() {
-		return "/html/users";
+		return "users";
+	}
+	
+	@RequestMapping("/showChart")
+	public String showChart() {
+		return "chart";
 	}
 	
 	@RequestMapping("/findCategoryAmt")
 	@ResponseBody
 	public List<TbCategoryAmt> findCategoryAmt(){
 		return userService.findCategoryAmt();
+	}
+	
+	@RequestMapping("/findCityGoodsAmt")
+	@ResponseBody
+	public List<TbCityGoodsAmt> findCityGoodsAmt(){
+		return userService.findCityGoodsAmt();
+	}
+	
+	
+	@RequestMapping("/findForceChart")
+	@ResponseBody
+	public ForceChart findForceChart() {
+		return userService.findForceChart();
 	}
 }

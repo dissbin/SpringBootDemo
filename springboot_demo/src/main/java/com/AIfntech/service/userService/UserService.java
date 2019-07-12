@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.AIfntech.service.dao.UserDao;
+import com.AIfntech.service.pojo.ForceChart;
 import com.AIfntech.service.pojo.Result;
 import com.AIfntech.service.pojo.TbCategoryAmt;
+import com.AIfntech.service.pojo.TbCityGoodsAmt;
 import com.AIfntech.service.pojo.User;
 
 @Component
@@ -38,5 +40,11 @@ public class UserService {
 	}
 	public List<TbCategoryAmt> findCategoryAmt() {
 		return userDao.findCategoryAmt();
+	}
+	public List<TbCityGoodsAmt> findCityGoodsAmt(){
+		return userDao.findCityGoodsAmt();
+	}
+	public ForceChart findForceChart() {
+		return userDao.findForceChart();
 	}
 }

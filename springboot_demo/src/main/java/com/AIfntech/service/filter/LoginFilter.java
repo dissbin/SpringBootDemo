@@ -30,11 +30,14 @@ public class LoginFilter extends HandlerInterceptorAdapter{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println();
 		System.out.println("request请求地址："+request.getServletPath());
 		System.out.println("request URL:"+request.getRequestURI());
 		HttpSession session = request.getSession(true);
+		session.setAttribute("targetUrl", request.getServletPath()+"");
 		String username = (String)session.getAttribute("username");
 		System.out.println("拦截器获取的用户名:"+username);
+		System.out.println("拦截器已设置目标网址:"+session.getAttribute("targetUrl"));
 		if(username == null) {
 			response.sendRedirect("/prepareLogin");
 		}

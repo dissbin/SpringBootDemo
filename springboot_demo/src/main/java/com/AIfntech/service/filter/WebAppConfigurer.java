@@ -49,7 +49,6 @@ public class WebAppConfigurer implements WebMvcConfigurer{
 		.excludePathPatterns("/prepareRegister")
 		.excludePathPatterns("/login")
 		.excludePathPatterns("/register")
-		.excludePathPatterns("/html/**")
 		.excludePathPatterns("/js/**")
 		.excludePathPatterns("/css/**")
 		.excludePathPatterns("/layui/**");

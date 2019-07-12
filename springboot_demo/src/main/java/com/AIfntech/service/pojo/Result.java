@@ -1,6 +1,8 @@
 package com.AIfntech.service.pojo;
 
-public class Result {
+import java.io.Serializable;
+
+public class Result implements Serializable{
 	public Result(boolean success,String info) {
 		this.info = info;
 		this.success = success;

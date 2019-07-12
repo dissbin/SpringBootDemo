@@ -113,8 +113,9 @@ span {
 							password:$("input:password").val()
 						},
 						function(data,status){
-							if(data['success'])
-								window.location.href="/html/users.html"; 
+							if(data['success']){
+								window.location.href = data['info'];
+							}
 							else
 								alert(data['info']);
 						}

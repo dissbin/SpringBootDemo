@@ -1,7 +1,8 @@
 package com.AIfntech.service.pojo;
 
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable{
 
 	private String username;
 	private String password;
